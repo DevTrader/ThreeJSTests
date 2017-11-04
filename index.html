@@ -13,6 +13,7 @@
 	<canvas id="myCanvas"></canvas> <!--NOTE: Add this selector to the renderer as a parameter to set it as the canvas instead of appending a generated one, now you can use anything as the background -->
 
 	<script src="js/three.min.js"></script> <!--NOTE: You can only use the minified version -->
+	<script src="js/TrackballControls.js"></script> <!-- from examples > js > controls -->
 
 	<script>
 		// Rendering Parameters
@@ -24,46 +25,56 @@
 
 		let randomColor = (Math.random() * 0xffffff);
 
-		//Camera and Lights
-		let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000 );
-		let scene = new THREE.Scene();
-		
-		let light = new THREE.AmbientLight(randomColor, 0.6);
-		scene.add(light);
-
-		let light1 = new THREE.PointLight(0xffffff, 0.5);
-		scene.add(light1);
-
-		//3D Object Mesh = Geometry + Material
-		let geometry = new THREE.BoxGeometry(200, 200, 200);
-		let material = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
-		let mesh = new THREE.Mesh(geometry, material);
-
-		mesh.position.set (0, 0, -1000);
-
-
-		scene.add(mesh);
-
-		// Animation loop
-		requestAnimationFrame(render);
-
-		let randomAnim = Math.random() * (0.1 - 0.01) + 0.01;
-		let randomPos = Math.random() * (10 - 0.01) + 0.01;
-
-		function render(){
-			mesh.rotation.x += randomAnim * 1.5;
-			mesh.rotation.y += randomAnim * 0.5;
-			renderer.render(scene, camera);
-			randomAnim = Math.random() * (0.1 - 0.01) + 0.001;
-			requestAnimationFrame(render);
-			randomColor = (Math.random() * 0xffffff);
-		}
+		//Camera, Controls and Lights
+		let camera, controls, scene;
 
 		//Init
-		renderer.render(scene, camera);
+		init();
+
+		function init(){
+
+			camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000 );
+			
+			controls = new THREE.TrackballControls(camera);
+			controls.addEventListener('change', render);
+
+			scene = new THREE.Scene();
+
+			let light = new THREE.AmbientLight(randomColor, 0.6);
+			scene.add(light);
+
+			let light1 = new THREE.PointLight(0xffffff, 0.5);
+			scene.add(light1);
+
+			//3D Object -> Mesh = Geometry + Material
+			let geometry = new THREE.BoxGeometry(200, 200, 200);
+			let material = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
+
+			let mesh = new THREE.Mesh(geometry, material);
+
+			mesh.position.set (0, 0, -1000); //It's better to position the camera.position.z instead.
 
 
-		
+			scene.add(mesh);
+				
+			// Animation loop
+			requestAnimationFrame(render);
+
+			let randomAnim = Math.random() * (0.1 - 0.01) + 0.01;
+			let randomPos = Math.random() * (10 - 0.01) + 0.01;
+
+			function render(){
+				mesh.rotation.x += randomAnim * 1.5;
+				mesh.rotation.y += randomAnim * 0.5;
+				renderer.render(scene, camera);
+				randomAnim = Math.random() * (0.1 - 0.01) + 0.001;
+				controls.update();
+				requestAnimationFrame(render);
+			}
+
+			renderer.render(scene, camera);
+		};
+	
 	</script>
 
 </body>
