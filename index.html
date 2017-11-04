@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ThreeJS testing</title>
+
+	<style type="text/css">
+		body{margin: 0;}
+	</style>
+
+</head>
+<body>
+
+	<canvas id="myCanvas"></canvas> <!--NOTE: Add this selector to the renderer as a parameter to set it as the canvas instead of appending a generated one, now you can use anything as the background -->
+
+	<script src="js/three.min.js"></script> <!--NOTE: You can only use the minified version -->
+
+	<script>
+		// Rendering Parameters
+		let renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myCanvas')}); //connects to <canvas>
+		renderer.setClearColor(0x00ff00);
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setPixelRatio(window.devivePixelRatio);
+		renderer.setSize(window.innerWidth, window.innerHeight);
+
+		//Camera and Lights
+		let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000 );
+		let scene = new THREE.Scene();
+		
+		let light = new THREE.AmbientLight(0xffffff, 0.5);
+		scene.add(light);
+
+		let light1 = new THREE.PointLight(0xffffff, 0.5);
+		scene.add(light1);
+
+		//3D Object Mesh = Geometry + Material
+		let geometry = new THREE.BoxGeometry(100, 100, 100);
+		let material = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
+		let mesh = new THREE.Mesh(geometry, material);
+		mesh.position.set (0, 0, -1000);
+
+
+		scene.add(mesh);
+
+		// Animation loop
+		requestAnimationFrame(render);
+
+		function render(){
+			mesh.rotation.x += 0.03;
+			mesh.rotation.y += 0.01;
+			renderer.render(scene, camera);
+			requestAnimationFrame(render);
+		}
+
+		//Init
+		renderer.render(scene, camera);
+		
+	</script>
+
+</body>
+</html>
