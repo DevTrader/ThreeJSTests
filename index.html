@@ -19,6 +19,13 @@
 
 	<script>
 		let camera, controls, scene, renderer;
+		let rmapped = 0;
+
+		let randomColor = (Math.random() * 0xffffff);
+
+		let light = new THREE.AmbientLight(randomColor, 0.5);
+		let light1 = new THREE.PointLight(0xffffff, 0.5);
+
 
 		init();
 		animate();
@@ -32,12 +39,9 @@
 
 			scene = new THREE.Scene();
 
-
-			let light = new THREE.AmbientLight(0xffffff, 0.5);
 			light.position.set (0, 1000, 250);
 			scene.add(light);
-
-			let light1 = new THREE.PointLight(0xffffff, 0.5);
+			
 			light1.position.set (500, 1500, 450);
 			scene.add(light1);
 
@@ -57,6 +61,13 @@
 		function animate(){
 			requestAnimationFrame(animate);
 			controls.update();
+
+			//var h = rmapped * 0.01 % 1;
+  			//var s = 0.5;
+  			//var l = 0.5;
+  			randomColor = (Math.random() * 0xffffff);
+  			light.color.setHex ( randomColor );
+
 		};
 
 		function render(){
